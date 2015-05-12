@@ -4,16 +4,21 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MY AWESOME PAGE</title>
+    <title>Movie Watchlist</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.css">
     <link rel="stylesheet" href="main.css">
+    <link href="favicon.ico" rel="icon" type="image/x-icon">
   </head>
   <body>
     <div class="container">
       <div class="row">
+        <h1>Movie Watchlist</h1>
         <div class="search">
-          <input type="text" placeholder="Enter movie title">
-          <button class="btn">Search</button>
+          <input type="text" placeholder="     Enter movie title">
+          <button class="myButton3">Search</button>
+          <label for="plot">Plot:</label>
+          <input type="radio" name="plot" value="full">Full</input>
+          <input type="radio" name="plot" value="short">Short</input>
         </div><!--.search-->
         <div class="searchResults"></div>
       </div><!--.row-->

@@ -13,21 +13,27 @@ $.get(FIRE_URL, function (data) {
 });
 
 $(".search button").click(function () {
-  var searchURL = OMDB_URL + "t=?" + $searchInput.val() + "&plot=full";
+  var searchURL = OMDB_URL + "t=?" + $searchInput.val() + "&plot=full&tomatoes=true";
   $.get(searchURL, showSearchResults);
 });
 
 function showSearchResults(data) {
-  var html = "<h1>" + data.Title + " (" + data.Year + ")</h1>";
-  html += "<img class='poster' src='" + data.Poster + "'></img>";
-  html += "<p>" + data.Plot + "</p>";
-  html += "<button>Add to Watchlist</button>";
+  var html = "<div class='col-lg-6 col-m-6 col-sm-6'><h2>" + data.Title + " (" + data.Year + ")</h2>";
+  html += "<img class='poster' src='" + data.Poster + "'></div>";
+  html += "<div class='col-lg-6 col-m-6 col-sm-6'><div class='ratings'>";
+  html += "<div class='tomatoLogo'>" + data.tomatoMeter + "</div>";
+  if (data.tomatoImage === "certified") {
+    html += "<div><img class='fresh' src='http://d3biamo577v4eu.cloudfront.net/static/images/icons/cf-lg.png'></div>";
+  };
+  html += "<div><div class='imdbLogo'>" + data.imdbRating + "</div>(" + data.imdbVotes + " Votes)</div>";
+  html += "<div>Metascore " + data.Metascore + "/100</div></div><div><p>" + data.Plot + "</p></div>";
+  html += "<div><button class='myButton'>Add to Watchlist</button></div></div>";
   $searchResults.empty();
   $searchResults.append(html);
 }
 
 $searchResults.on("click", "button", (function() {
-  var searchURL = OMDB_URL + "t=?" + $searchInput.val();
+  var searchURL = OMDB_URL + "t=?" + $searchInput.val() + "&plot=full&tomatoes=true";
   var $addButton = $(this).closest("button");
   $.get(searchURL, function (data) {
     $.post(FIRE_URL, JSON.stringify(data), function (response) {
@@ -37,12 +43,16 @@ $searchResults.on("click", "button", (function() {
 }));
 
 function addMovie (data, id) {
-  var html = "<div data-id=" + id + " class='movie col-lg-6'><div><img src='" + data.Poster + "' alt='" + data.Title + "'></img></div>";
+  var html = "<div data-id=" + id + " class='movie'><div><img src='" + data.Poster + "' alt='" + data.Title + "'></img></div>";
   html += "<div>" + data.Title + "</div>";
   html += "<div>" + data.Year + "</div>";
+  html += "<div><div class='tomatoLogo'>" + data.tomatoMeter + "</div></div>";
+  if (data.tomatoImage === "certified") {
+    html += "<div><img src='http://d3biamo577v4eu.cloudfront.net/static/images/icons/cf-lg.png'></div>";
+  };
   html += "<div><div class='imdbLogo'>" + data.imdbRating + "</div>(" + data.imdbVotes + " Votes)</div>";
   html += "<div>Metascore " + data.Metascore + "/100</div>";
-  html += "<div><button>Remove</button></div></div>";
+  html += "<div><button class='myButton2'>Remove</button></div></div>";
   $watchlist.append(html);
 }
 
