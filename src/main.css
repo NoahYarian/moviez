@@ -1,0 +1,59 @@
+body {
+  background: #888;
+}
+
+* {
+  border: 1px solid red;
+}
+
+.container {
+  background: #ddd;
+}
+
+.row {
+  background: #33d;
+}
+
+.search {
+  background: green;
+}
+
+.searchResults {
+  background: #f90;
+}
+
+.watchlist {
+  background: #f5f;
+}
+
+.movie {
+  display: flex;
+  justify-content: space-between;
+  height: 150px;
+}
+
+.movie div {
+  vertical-align: middle;
+  line-height: 150px;
+}
+
+.movie img {
+  height: 150px;
+}
+
+div.imdbLogo {
+  background-image: url("http://ia.media-imdb.com/images/G/01/imdb/images/title/titlePageSprite-1214724556._V_.png");
+  background-position: -180px -71px;
+  width: 66px;
+  height: 66px;
+  line-height: 150px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 15px;
+  font-weight: bold;
+  color: black;
+  font-family: tahoma;
+  float: left;
+  padding-right: 5px;
+}
