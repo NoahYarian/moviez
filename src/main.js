@@ -7,6 +7,7 @@ var $searchResults = $(".searchResults");
 var $watchlist = $(".watchlist");
 
 $.get(FIRE_URL, function (data) {
+    //addHeaders();
   Object.keys(data).forEach(function (id) {
     addMovie(data[id], id);
   });
@@ -21,10 +22,10 @@ function showSearchResults(data) {
   var html = "<div class='col-lg-6 col-m-6 col-sm-6'><h2>" + data.Title + " (" + data.Year + ")</h2>";
   html += "<img class='poster' src='" + data.Poster + "'></div>";
   html += "<div class='col-lg-6 col-m-6 col-sm-6'><div class='ratings'>";
-  html += "<div class='tomatoLogo'>" + data.tomatoMeter + "</div>";
   if (data.tomatoImage === "certified") {
     html += "<div><img class='fresh' src='http://d3biamo577v4eu.cloudfront.net/static/images/icons/cf-lg.png'></div>";
   };
+  html += "<div class='tomatoLogo'>" + data.tomatoMeter + "</div>";
   html += "<div><div class='imdbLogo'>" + data.imdbRating + "</div>(" + data.imdbVotes + " Votes)</div>";
   html += "<div>Metascore " + data.Metascore + "/100</div></div><div><p>" + data.Plot + "</p></div>";
   html += "<div><button class='myButton'>Add to Watchlist</button></div></div>";
@@ -42,16 +43,41 @@ $searchResults.on("click", "button", (function() {
   });
 }));
 
+function decomma(str) {
+  var num = "";
+  str.split("").forEach(function(digit, i) {
+    if (digit !== ",") {
+      num += digit;
+    };
+    return num;
+  });
+  return num;
+};
+
+function numConvert(num) {
+  if (num / 1000000 > 1) {
+    return (num / 1000000).toFixed(1) + "M";
+  } else if (num / 10000 > 1) {
+    return (num / 1000).toFixed(0) + "K";
+  } else {
+    return num;
+  }
+};
+
 function addMovie (data, id) {
-  var html = "<div data-id=" + id + " class='movie'><div><img src='" + data.Poster + "' alt='" + data.Title + "'></img></div>";
+  var html = "<div data-id=" + id + " class='movie'>";
+  html += "<div><img src='" + data.Poster + "' alt='" + data.Title + "'></img></div>";
   html += "<div>" + data.Title + "</div>";
   html += "<div>" + data.Year + "</div>";
-  html += "<div><div class='tomatoLogo'>" + data.tomatoMeter + "</div></div>";
   if (data.tomatoImage === "certified") {
-    html += "<div><img src='http://d3biamo577v4eu.cloudfront.net/static/images/icons/cf-lg.png'></div>";
+    html += "<div><img class='fresh' src='http://d3biamo577v4eu.cloudfront.net/static/images/icons/cf-lg.png'></div>";
+  } else {
+    html += "<div></div>";
   };
-  html += "<div><div class='imdbLogo'>" + data.imdbRating + "</div>(" + data.imdbVotes + " Votes)</div>";
-  html += "<div>Metascore " + data.Metascore + "/100</div>";
+  html += "<div><div class='tomatoLogo'>" + data.tomatoMeter + "</div><div class='tomatoVotes'>" + numConvert(data.tomatoUserReviews) + "</div></div>";
+  html += "<div class='imdb'><div class='imdbLogo'>" + data.imdbRating + "</div>";
+  html += "<div class='imdbVotes'>" + numConvert(decomma(data.imdbVotes)) + "</div></div>";
+  html += "<div class='metascore'><div class='metascoreNum'>" + data.Metascore + "/100</div><div class='metascoreLabel'>Metascore</div></div>";
   html += "<div><button class='myButton2'>Remove</button></div></div>";
   $watchlist.append(html);
 }
@@ -68,3 +94,18 @@ $watchlist.on("click", "button", function() {
   });
 
 });
+
+//function addHeaders() {
+  //var html = "<div class='movie header'>";
+  //html += "<div>Poster</div>";
+  //html += "<div>Title</div>";
+  //html += "<div>Year</div>";
+  //html += "<div>Tomatometer</div>";
+  //html += "<div>Certified Fresh</div>";
+  //html += "<div>IMDb Rating</div>";
+  //html += "<div>IMDb Votes</div>";
+  //html += "<div>Metascore</div>";
+  //html += "<div>Remove</div>";
+  //html += "</div>";
+  //$watchlist.append(html);
+//}
