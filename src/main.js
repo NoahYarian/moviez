@@ -25,12 +25,21 @@ function showSearchResults(data) {
   if (data.tomatoImage === "certified") {
     html += "<div><img class='fresh' src='http://d3biamo577v4eu.cloudfront.net/static/images/icons/cf-lg.png'></div>";
   };
-  html += "<div class='tomatoLogo'>" + data.tomatoMeter + "</div>";
-  html += "<div><div class='imdbLogo'>" + data.imdbRating + "</div>(" + data.imdbVotes + " Votes)</div>";
-  html += "<div>Metascore " + data.Metascore + "/100</div></div><div><p>" + data.Plot + "</p></div>";
+  html += "<div><div class='tomatoLogo'>" + data.tomatoMeter + "</div><div class='tomatoVotes'>" + numConvert(data.tomatoUserReviews) + "</div></div>";
+  html += "<div class='imdb'><div class='imdbLogo'>" + data.imdbRating + "</div>";
+  html += "<div class='imdbVotes'>" + numConvert(decomma(data.imdbVotes)) + "</div></div>";
+  html += "<div class='meta'>" + data.Metascore + "</div></div><div><p>" + data.Plot + "</p></div>";
   html += "<div><button class='myButton'>Add to Watchlist</button></div></div>";
   $searchResults.empty();
   $searchResults.append(html);
+  var $meta = $(".searchResults .meta")
+  if (data.Metascore > 60) {
+    $meta.addClass("high");
+  } else if (data.Metascore >= 40) {
+    $meta.addClass("med");
+  } else if (data.Metascore < 40) {
+    $meta.addClass("low");
+  };
 }
 
 $searchResults.on("click", "button", (function() {
@@ -77,9 +86,18 @@ function addMovie (data, id) {
   html += "<div><div class='tomatoLogo'>" + data.tomatoMeter + "</div><div class='tomatoVotes'>" + numConvert(data.tomatoUserReviews) + "</div></div>";
   html += "<div class='imdb'><div class='imdbLogo'>" + data.imdbRating + "</div>";
   html += "<div class='imdbVotes'>" + numConvert(decomma(data.imdbVotes)) + "</div></div>";
-  html += "<div class='metascore'><div class='metascoreNum'>" + data.Metascore + "/100</div><div class='metascoreLabel'>Metascore</div></div>";
+  html += "<div class='meta'>" + data.Metascore + "</div>";
   html += "<div><button class='myButton2'>Remove</button></div></div>";
   $watchlist.append(html);
+  var $meta = $(".movie:last-child .meta");
+  if (data.Metascore > 60) {
+    $meta.addClass("high");
+  } else if (data.Metascore >= 40) {
+    $meta.addClass("med");
+  } else if (data.Metascore < 40) {
+    $meta.addClass("low");
+  };
+
 }
 
 $watchlist.on("click", "button", function() {
