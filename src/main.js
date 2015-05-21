@@ -119,7 +119,7 @@ fb.onAuth(function (authData) {
     onLoggedIn.removeClass('hidden');
     onLoggedOut.addClass('hidden');
     onTempPassword.addClass('hidden');
-    $('.onLoggedIn h1').text(`Hello ${authData.password.email}`);
+    $('.onLoggedIn h3').text(`Hello ${authData.password.email}`);
   } else {
     onLoggedOut.removeClass('hidden');
     onLoggedIn.addClass('hidden');
