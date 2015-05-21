@@ -205,7 +205,7 @@ function numConvert(num) {
 function addMovie (data, id) {
   var html = "<div data-id=" + id + " class='movie'>";
   html += "<div><img src='" + data.Poster + "' alt='" + data.Title + "'></img></div>";
-  html += "<div>" + data.Title + "</div>";
+  html += "<div class='title'>" + data.Title + "</div>";
   html += "<div>" + data.Year + "</div>";
   if (data.tomatoImage === "certified") {
     html += "<div><img class='fresh' src='http://d3biamo577v4eu.cloudfront.net/static/images/icons/cf-lg.png'></div>";
@@ -228,6 +228,12 @@ function addMovie (data, id) {
   };
 
 }
+
+$watchlist.on("click", "img", function () {
+  var $title = $(this).parent().next().text();
+  var searchURL = OMDB_URL + "t=?" + $title + "&plot=full&tomatoes=true";
+  $.get(searchURL, showSearchResults);
+})
 
 $watchlist.on("click", "button", function() {
   var $movie = $(this).closest(".movie");
