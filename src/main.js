@@ -83,11 +83,13 @@ function clearLoginForm () {
 }
 
 function saveAuthData (authData) {
-  $.ajax({
-    method: 'PUT',
-    url: `${FIREBASE_URL}/users/${authData.uid}/profile.json`,
-    data: JSON.stringify(authData)
-  });
+  var ref = fb.child(`users/${authData.uid}/profile`);
+  ref.set(authData);
+  // $.ajax({
+  //   method: 'PUT',
+  //   url: `${FIREBASE_URL}/users/${authData.uid}/profile.json`,
+  //   data: JSON.stringify(authData)
+  // });
 }
 
 function doLogin (email, password, cb) {
@@ -135,11 +137,19 @@ fb.onAuth(function (authData) {
 /////////////////////
 function getUserMovies () {
   $watchlist.empty();
-  $.get(userMoviesURL, function (data) {
-    Object.keys(data).forEach(function (id) {
-      addMovie(data[id], id);
-    });
+  var ref = fb.child(`users/${fb.getAuth().uid}/movies`);
+  ref.on("value", function(snapshot) {
+    Object.keys(snapshot.val()).forEach(function (id) {
+       addMovie(snapshot.val()[id], id);
+     });
+  }, function (errorObject) {
+    console.log("The read failed: " + errorObject.code);
   });
+  // $.get(userMoviesURL, function (data) {
+  //   Object.keys(data).forEach(function (id) {
+  //     addMovie(data[id], id);
+  //   });
+  // });
 }
 
 $(".search button").click(function () {
@@ -175,9 +185,13 @@ $searchResults.on("click", "button", (function() {
   var searchURL = OMDB_URL + "t=?" + $searchInput.val() + "&plot=full&tomatoes=true";
   var $addButton = $(this).closest("button");
   $.get(searchURL, function (data) {
-    $.post(userMoviesURL, JSON.stringify(data), function (response) {
-      addMovie(data, response.name);
+    var ref = fb.child(`users/${fb.getAuth().uid}/movies`);
+    ref.push(data, function(err){
+      err && console.log(err);
     });
+    // $.post(userMoviesURL, JSON.stringify(data), function (response) {
+    //   addMovie(data, response.name);
+    // });
   });
 }));
 
@@ -239,11 +253,12 @@ $watchlist.on("click", "button", function() {
   var $movie = $(this).closest(".movie");
   var id = $movie.attr('data-id');
   $movie.remove();
-  var deleteUrl = userMoviesURL.slice(0, -5) + '/' + id + '.json';
-
-  $.ajax({
-    url: deleteUrl,
-    type: 'DELETE'
-  });
+  var ref = fb.child(`users/${fb.getAuth().uid}/movies/${id}`);
+  ref.remove();
+  //var deleteUrl = userMoviesURL.slice(0, -5) + '/' + id + '.json';
+  // $.ajax({
+  //   url: deleteUrl,
+  //   type: 'DELETE'
+  // });
 
 });
